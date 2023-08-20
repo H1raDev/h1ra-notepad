@@ -6,7 +6,7 @@ local Notes = {}
 
 QBCore.Functions.CreateUseableItem("notepad", function(source, item) TriggerClientEvent("h1ra-notepad:Client:Create", source) end)
 
-QBCore.Functions.CreateCallback('jim-notepad:Server:Sync', function(source, cb) cb(Notes) end)
+QBCore.Functions.CreateCallback('h1ra-notepad:Server:Sync', function(source, cb) cb(Notes) end)
 
 RegisterNetEvent("h1ra-notepad:Server:Create", function(data)
 	for k, v in pairs(data) do print(k, tostring(v)) end
@@ -60,18 +60,6 @@ RegisterNetEvent("h1ra-notepad:Server:Create", function(data)
 
 	TriggerClientEvent("h1ra-notepad:Client:Sync", -1, Notes)
 end)
-RegisterNetEvent("h1ra-notepad:Server:Destroy", function(data) Notes[data] = nil TriggerClientEvent("jim-notepad:Client:Sync", -1, Notes) end)
-RegisterNetEvent("h1ra-notepad:Server:Read", function(data) local src = source TriggerClientEvent("jim-notepad:Client:Read", src, Notes[data.noteid]) end)
-RegisterNetEvent("h1ra-notepad:Server:Sync", function(coords) TriggerClientEvent("jim-notepad:Client:SyncEffect", -1, coords) end)
-
-local function CheckVersion()
-	PerformHttpRequest('https://raw.githubusercontent.com/jimathy/jim-notepad/master/version.txt', function(err, newestVersion, headers)
-		local currentVersion = GetResourceMetadata(GetCurrentResourceName(), 'version')
-		if not newestVersion then print("Currently unable to run a version check.") return end
-		local advice = "^1You are currently running an outdated version^7, ^1please update^7"
-		if newestVersion:gsub("%s+", "") == currentVersion:gsub("%s+", "") then advice = '^6You are running the latest version.^7'
-		else print("^3Version Check^7: ^2Current^7: "..currentVersion.." ^2Latest^7: "..newestVersion) end
-		print(advice)
-	end)
-end
-CheckVersion()
+RegisterNetEvent("h1ra-notepad:Server:Destroy", function(data) Notes[data] = nil TriggerClientEvent("h1ra-notepad:Client:Sync", -1, Notes) end)
+RegisterNetEvent("h1ra-notepad:Server:Read", function(data) local src = source TriggerClientEvent("h1ra-notepad:Client:Read", src, Notes[data.noteid]) end)
+RegisterNetEvent("h1ra-notepad:Server:Sync", function(coords) TriggerClientEvent("h1ra-notepad:Client:SyncEffect", -1, coords) end)
